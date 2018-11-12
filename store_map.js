@@ -79,35 +79,67 @@ function addStores (stores) {
 		.attr("y", function(d) {return projection([Number(d.longitude), Number(d.latitude)])[1];})
 		.attr("xlink:href", function(d) {
 			if (d.assistance_type == "snap_wic") {
-				return "assets/cilantro_small.png";
+				return "assets/pea_reg.png";
 			}
 			else if (d.assistance_type == "snap") {
-				return "assets/pea_reg.png";
+				return "assets/chicken_small.png";
 			}
 			else if (d.assistance_type == "wic") {
 				return "assets/olive_small.png";
 			}
 			else if (d.assistance_type == "none") {
-				return "assets/cilantro_small.png";
-			}
-			else {
-				return "assets/cilantro_small.png";
+				return "assets/pepper_small.png";
 			}
 		})
+		.attr("opacity", 1.0)
 		.attr("height",15)
-		.attr("width", 15);
+		.attr("width", 15)
+		.on("mouseover", function () {
+			if (d3.select(this).attr('opacity') == 1.0) {
+				d3.select(this).attr('opacity', 0.5);
+			}
+		})
+		.on("mouseout", function () {
+			if (d3.select(this).attr('opacity') == 0.5) {
+				d3.select(this).attr('opacity', 1.0);
+			}
+		})
+		.on("click", function(d) {
+			d3.selectAll("g.marker").attr('opacity', 1.0);
+			d3.select(this).attr('opacity', 0.5);
+			d3.select("#info1")
+				.text(d.store_name);
+			d3.select("#info2")
+				.text(d.address);
+			d3.select("#info3")
+				.text( function(e) {
+					if (d.assistance_type == "snap_wic") {
+						console.log("hi");
+						return "SNAP and WIC";
+					}
+					else if (d.assistance_type == "snap") {
+						return "SNAP";
+					}
+					else if (d.assistance_type == "wic") {
+						return "WIC";
+					}
+					else if (d.assistance_type == "none") {
+						return "None";
+					}
+				});
+			});
 
 	
-	var selectedPoints = map.append("g");
+	/*var selectedPoints = map.append("g");
 	selectedPoints.selectAll("g.marker")
 		.data(stores)
 		.enter()
 		.append("image")
 		.attr("x", function(d) {return projection([Number(d.longitude), Number(d.latitude)])[0];})
 		.attr("y", function(d) {return projection([Number(d.longitude), Number(d.latitude)])[1];})
-		/*.attr("xlink:href", "assets/cilantro_small.png")*/
-		.attr("height",15)
-		.attr("width", 15)
+		//.attr("xlink:href", "assets/cilantro_small.png")
+		//.attr("height",15)
+		//.attr("width", 15)
 		.on("mouseover", function () {
 			//if (d3.select(this).attr('opacity') == 0) {
 				d3.select(this).attr('opacity', 0.8);
@@ -142,6 +174,7 @@ function addStores (stores) {
 					}
 				});
 		});
+*/
 }
 
 window.onload = init();

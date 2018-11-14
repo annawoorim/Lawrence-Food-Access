@@ -27,18 +27,19 @@ function loadData() {
 	d3.queue()
 	.defer(d3.json, "data/roads_topo.json")
 	.defer(d3.csv, "data/lawrence_supermarkets.csv")
+	.defer(d3.json, "data/lawrence_selected_tracts_topo.json")
 	.await(processData);
 }
 
-function processData(error, roadsFile, stores) {
+function processData(error, roadsFile, stores, tracts) {
 	if (error) throw error;
 	else {
 		// roadsFile: topojson with roads data
-		drawMap(roadsFile, stores);
+		drawMap(roadsFile, stores, tracts);
 	}
 }
 
-function drawMap(roadsFile, stores) {
+function drawMap(roadsFile, stores, tracts) {
 	map.append("image")
 		.attr("x", 0)
 		.attr("y", 0)
@@ -46,9 +47,17 @@ function drawMap(roadsFile, stores) {
 		.attr("height", height)
 		.attr("xlink:href", "assets/rice_plate.png");
 
+	map.append("image")
+		.attr("x", 0)
+		.attr("y", 0)
+		.attr("width", width)
+		.attr("height", height)
+		.attr("xlink:href", "assets/lawrence_food_access_map.png");
+
 	// Turn lat/lon coordinates into screen coordinates
 	// Question: mercator projection seems more accurate, but what are benefits of albers projection?
 	projection = d3.geoMercator().fitSize([width, height], topojson.mesh(roadsFile, roadsFile.objects.roads));
+	//projection = d3.geoMercator().fitSize([width, height], topojson.mesh(tracts, tracts.objects.lawrence_selected_tracts));
 	path = d3.geoPath().projection(projection);
 
 	
@@ -63,6 +72,14 @@ function drawMap(roadsFile, stores) {
 		.attr("stroke", "black")
 		.attr("stroke-width", 0.5)
 		.attr("stroke-opacity", 0.3);
+
+	var census_tracts = map.append("g");
+	census_tracts.append("path")
+		.datum(topojson.mesh(tracts, tracts.objects.lawrence_selected_tracts))
+		.enter()
+		.attr("d", path)
+		.attr("class", "tract")
+		.attr("fill", "red");
 	
 	addStores(stores);
 }

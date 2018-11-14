@@ -91,7 +91,7 @@ function addStores (stores) {
 				return "assets/pea_small.png";
 			}*/
 			else if (d.assistance_type == "super") {
-				return "assets/cilantro_small.png"
+				return "assets/cilantro_small.png";
 			}
 		})
 		.attr("opacity", 1.0)
@@ -125,6 +125,9 @@ function addStores (stores) {
 					}
 					else if (d.assistance_type == "none") {
 						return "None";
+					}
+					else if (d.assistance_type == "super") {
+						return "SNAP and WIC";
 					}
 				});
 			});
@@ -175,7 +178,7 @@ function addStores (stores) {
 						return "None";
 					}
 					else if (d.assistance_type == "super") {
-						return "Supermarket - SNAP and WIC";
+						return "SNAP and WIC";
 					}
 				});
 			});
